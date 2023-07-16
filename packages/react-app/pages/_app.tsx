@@ -3,6 +3,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import {
   connectorsForWallets,
+  getDefaultWallets,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import {
@@ -21,6 +22,8 @@ import { Alfajores, Celo } from "@celo/rainbowkit-celo/chains";
 
 import Layout from "../components/Layout";
 
+const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
+
 const { chains, provider } = configureChains(
   [Alfajores, Celo],
   [
@@ -30,19 +33,13 @@ const { chains, provider } = configureChains(
   ]
 );
 
-const connectors = connectorsForWallets([
-  {
-    groupName: "Recommended with CELO",
-    wallets: [
-      Valora({ chains }),
-      CeloWallet({ chains }),
-      CeloDance({ chains }),
-      metaMaskWallet({ chains }),
-      omniWallet({ chains }),
-      walletConnectWallet({ chains }),
-    ],
-  },
-]);
+const { wallets } = getDefaultWallets({
+  appName: "Co:operate workshop",
+  projectId,
+  chains,
+});
+
+const connectors = connectorsForWallets([...wallets]);
 
 const wagmiClient = createClient({
   autoConnect: true,
