@@ -73,9 +73,25 @@ export default function AutoOffsetPoolToken() {
 
   return (
     <div>
-      <button onClick={() => offset?.()}>offset</button>
+      <button
+        className="inline-flex w-full justify-center rounded-full border px-5 my-5 py-2 text-md font-medium border-wood bg-prosperity text-black hover:bg-snow"
+        onClick={() => offset?.()}
+      >
+        offset
+      </button>
       {isLoading && <div>Check Wallet</div>}
-      {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+      {isSuccess && (
+        <div>
+          <a
+            href={`https://celoscan.io/${JSON.stringify(data.hash)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {" "}
+            Transaction: {JSON.stringify(data.hash)}
+          </a>{" "}
+        </div>
+      )}{" "}
     </div>
   );
 }
