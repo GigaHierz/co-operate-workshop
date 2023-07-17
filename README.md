@@ -304,7 +304,7 @@ export default function List() {
   const toucan = new ToucanClient("alfajores");
   const { address } = useAccount();
 
-  const [retirements, setRetirements] = useState([]);
+  const [retirements, setRetirements] = useState<UserRetirementsResponse[]>([]);
 
   const getUserRetirements = async () => {
     const result =
@@ -495,9 +495,25 @@ const offset = async () => {
 
 return (
   <div>
-    <button onClick={() => offset?.()}>offset</button>
+    <button
+      className="inline-flex w-full justify-center rounded-full border px-5 my-5 py-2 text-md font-medium border-wood bg-prosperity text-black hover:bg-snow"
+      onClick={() => offset?.()}
+    >
+      offset
+    </button>
     {isLoading && <div>Check Wallet</div>}
-    {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+    {isSuccess && (
+      <div>
+        <a
+          href={`https://celoscan.io/tx/${JSON.stringify(data.hash)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {" "}
+          Transaction: {JSON.stringify(data.hash)}
+        </a>{" "}
+      </div>
+    )}{" "}
   </div>
 );
 ```
@@ -580,9 +596,25 @@ export default function AutoOffsetPoolToken() {
 
   return (
     <div>
-      <button onClick={() => offset?.()}>offset</button>
+      <button
+        className="inline-flex w-full justify-center rounded-full border px-5 my-5 py-2 text-md font-medium border-wood bg-prosperity text-black hover:bg-snow"
+        onClick={() => offset?.()}
+      >
+        offset
+      </button>
       {isLoading && <div>Check Wallet</div>}
-      {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+      {isSuccess && (
+        <div>
+          <a
+            href={`https://celoscan.io/tx/${JSON.stringify(data.hash)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {" "}
+            Transaction: {JSON.stringify(data.hash)}
+          </a>{" "}
+        </div>
+      )}{" "}
     </div>
   );
 }
