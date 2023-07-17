@@ -1,8 +1,10 @@
-# Retiring Carbon Credits on Celo using Toucan SDK
+# Retiring Carbon Credits on Celo using Toucan SDK :deciduous_tree:
 
-Retire Carbon Credits on Celo using ToucanSDK
-Learn how to make your dApp climate positive with a few lines of code.
-Climate change is real, and thinking of our carbon footprint when buildlsing software should be part of the planning process as much as thinking about the architecture. One blockchain that is leading in this regard is Celo blockchain, and they are even offsetting more carbon than they are producing. So, if your choice of network for your application is Celo, you already made a step in the right direction. But other actions can increase your or your users carbon footprint and, in this tutorial, you will learn how to account for that in a few lines of code and create a climate positive app. If you are new to carbon credit retirements and what kind of infrastructure tools Toucan provides, make sure to read up on it in their blog.
+Retire Carbon Credits on Celo using ToucanSDK :seedling:
+
+Learn how to make your dApp climate positive with a few lines of code. :woman_technologist:
+
+Climate change is real, and thinking of our carbon footprint when building software should be part of the planning process as much as thinking about the architecture. One blockchain that is leading in this regard is Celo blockchain. They are even offsetting more carbon than they are producing. So, if your choice of network for your application is [Celo](https://celo.org/), you already made a step in the right direction. But other actions can increase your or your users carbon footprint and, in this tutorial, you will learn how to account for that in a few lines of code and create a climate positive app. If you are new to carbon credit retirements and what kind of infrastructure tools Toucan provides, make sure to read up on it in their [blog](https://blog.toucan.earth).
 
 ### Prerequisites:
 
@@ -17,11 +19,11 @@ To start building, you'll need a basic understanding of web development, Node (v
 - Celo-Composer
 - Toucan SDK
 
-Okay. What will learn in this tutorial in detail? We will learn how to retire carbon credits on Celo in a React. To do that we will redeem Nature Carbon Tonnes (NCTs) for tokenized carbon credits (TCO2s) and retire those. We will also learn how to get all data related to tokens and retirements through querying the [subgraph](https://thegraph.com/hosted-service/subgraph/toucanprotocol/alfajores).
+Okay. What will learn in this tutorial in detail? We will learn how to retire carbon credits on Celo. To do that we will have to first aquire some carbon pool token fomr a DEX, redeem these e.g,Nature Carbon Tonnes (NCTs) for tokenized carbon credits (TCO2s) and retire those. We will also learn how to get all data related to tokens and retirements through querying the [subgraph](https://thegraph.com/hosted-service/subgraph/toucanprotocol/alfajores). As a little cherie on the top, we will do a quick preview of the OffsetHelper that will simplify all of this even more!!
 
 By the end of this tutorial, you will know
 
-- how to redeem NCT for TCO2
+- how to redeem carbon reference tokens, like NCT for TCO2
 - how to retire TCO2
 - how to query the subgraph to get details on tokens, retirements and certificates
 
@@ -69,13 +71,15 @@ yarn run dev
 
 ---
 
-## walletconnect update
+## Walletconnect Update
 
-get walletconnect Id -
-
-Every dApp that relies on WalletConnect now needs to obtain a projectId from [WalletConnect Cloud](https://cloud.walletconnect.com/sign-in). This is absolutely free and only takes a few minutes.
+With the newest update, every dApp that relies on WalletConnect now needs to obtain a projectId from [WalletConnect Cloud](https://cloud.walletconnect.com/sign-in). This is absolutely free and only takes a few minutes.
 
 Provide the projectId to getDefaultWallets and individual RainbowKit wallet connectors like the following:
+
+Rename the `env.example`to `.env`
+
+Add you token ID as vaule for `NEXT_PUBLIC_WC_PROJECT_ID`.
 
 ## Retire Carbon Credits
 
@@ -96,6 +100,8 @@ or
 ```
 yarn add toucan-sdk
 ```
+
+In case it shows an error message with `Module not found: Can't resolve 'toucan-sdk'`, just delete the noe_moudles and run `yarn`or `npm  i` again.
 
 ### Get Toucan Client
 
@@ -145,11 +151,11 @@ export default function Home() {
 
 ### Redeem Tokens form a PoolContract (e.g. NCT)
 
-To retire Carbon Credits, we need pool tokens (e.g., NCTs) or carbon reference tokens like TCO2s. We can get them from the Toucan Faucet. In this example we will get NCT, as theses are the tokens, you can buy in an exchange like Ubeswap.
+To retire Carbon Credits, we need pool tokens (e.g., NCTs) or carbon reference tokens like TCO2s. We can get them from the [Toucan Faucet](https://faucet.toucan.earth/). In this example we will get NCT, as theses are the tokens, you can buy in an exchange like [Ubeswap](https://ubeswap.org/).
 
 What is the difference between NCTs and TCO2s? Simply put, TCO2s are tokenized carbon credits. While NCT are the first carbon reference tokens created on Toucans infrastructure and are stripped of most attributes. As a user you will only have TCO2 tokens, if you tokenized carbon credits yourself or if you have already redeemed NCTs for TCO2s. So, this example will start with NCTs.
 
-🍃 Get some Nature Carbon Tonnes (NCT) form the Toucan Faucet before you continue. Make sure you have CELO to pay the gas fee for the withdrawal, you can get some from the Celo Faucet. 🍃
+🍃 Get some Nature Carbon Tonnes (NCT) form the Toucan Faucet before you continue. Make sure you have CELO to pay the gas fee for the withdrawal, you can get some from the [Celo Faucet](https://faucet.celo.org/alfajores). 🍃
 
 Now, using the ToucanSDK we will auto-redeem the Pool tokens with `toucan.redeemAuto2`, where they are exchanged for the lowest ranking TCO2s. The function also returns the addresses of the redeemed TCO2s, which we need for the next step. As arguments for the function, we will need the pool symbol, that we want to retire, like "NCT". We will also need to input the amount of tokens we wish to retire, use `parseEther("1")` from the "ethers.js" for that.
 
@@ -159,8 +165,8 @@ After having chosen TCO2s we want to retire, (we can choose several) we can rede
 
 But today we stay simple with `toucan.redeemAuto2`.
 
-```
-await toucan.redeemAuto2("NCT", parseEther("0.01"));
+```typescript
+await toucan.redeemAuto2("NCT", parseEther("1"));
 ```
 
 Now let's put that code in a function and add a button to trigger it, so we can see it in action!! We also want to store the return value, the TCO2 address in a variable, as we will want to use it in the next step.
@@ -184,7 +190,7 @@ export default function Home() {
   const redeemPoolToken = async (): Promise<void> => {
     const redeemedTokenAddress = await toucan.redeemAuto2(
       "NCT",
-      parseEther("0.01")
+      parseEther("1")
     );
     redeemedTokenAddress && setTco2address(redeemedTokenAddress[0].address);
   };
@@ -240,7 +246,7 @@ export default function Home() {
   };
 
   const retirePoolToken = async (): Promise<void> => {
-    tco2address.length && (await toucan.retire(parseEther("1.0"), tco2address));
+    tco2address.length && (await toucan.retire(parseEther("1"), tco2address));
   };
 
   return (
@@ -315,7 +321,7 @@ export default function List() {
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            {retirements.length && (
+            {retirements?.length && (
               <div className="overflow-hidden ring-1 ring-black">
                 <table className="min-w-full divide-y divide-black">
                   <thead className="bg-prosperity">
@@ -390,6 +396,195 @@ export default function List() {
 Add the list page into the header.tsx file and your "Retirement List Page" and you are done!
 
 ---
+
+## Offsetting with the OffsetHelper
+
+So far the OffsetHelper has only been deployed on Polygon. But now it's almost ready.
+This contract will make it even easier to retire carbon credits.
+
+What does it do in detail:
+
+- user exchanges cUSD for NCT tokens at one of the DEXs (Ubeswap, Uniswap soon)
+- user interacts with the NCT token contract to redeem the tokens for TCO2
+- user interacts with the TCO2 token contract to retire the TCO2
+
+very cool!! lets try it out!!!
+
+first let's create a new page called `autoOffset.tsx`. Let's use the `usePrepareContractWrite` and `useContractWrite` from the wagmi library to call the `autoOffsetPoolToken` function.
+You will need to look up the address of the poolToken you want to retire/offset. You can find all addresses of Toucans [deployed contracts](https://toucan.earth/contracts) on their page.
+The token should already be in your wallet. If you need some for testing, head over to our faucet. Otherwise head over to Ubeswap (soon Uniswap) to buy some. There are other functions in the OffsetHelper, that already overtake the swapping part. So, check it out. On Celo you can use only the token functions like `autoOffsetExactInToken` and `autoOffsetExactOutToken`and don't need the functions for native tokens like `autoOffsetExactInETH` and `autoOffsetExactOutETH`.
+
+```typescript
+autoOffsetPoolToken(poolToken: string, amount: BigNumber);
+```
+
+```typescript
+import { parseEther } from "ethers/lib/utils.js";
+import { useContractWrite, usePrepareContractWrite } from "wagmi";
+
+export default function autoOffset() {
+  const poolAddress = "0x02De4766C272abc10Bc88c220D214A26960a7e92";
+  const amount = parseEther("1");
+
+  const { config } = usePrepareContractWrite({
+    address: "0xAB62E8a5A43453339f745EaFcbEE0302A31c3d5E",
+    abi: [
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_poolToken",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "_amountToOffset",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    functionName: "autoOffsetPoolToken",
+    args: [
+      poolAddress,
+      amount,
+      {
+        gasLimit: 2500000,
+      },
+    ],
+  });
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  return <div></div>;
+}
+```
+
+okay. you might get an error. and for a reason. First we will have the user approve the amount that the OffsetHelper will retire. Here the Toucan SDK comes in handy again. We can get the poolcontract by just looking for the symbol like "NCT".
+
+```typescript
+import ToucanClient from "toucan-sdk";
+import { useProvider, useSigner } from "wagmi";
+
+const provider = useProvider();
+const { data: signer, isError } = useSigner();
+const toucan = new ToucanClient("celo", provider);
+signer && toucan.setSigner(signer);
+
+const poolToken = toucan.getPoolContract("NCT");
+const offsetHelperAddress = "0xAB62E8a5A43453339f745EaFcbEE0302A31c3d5E";
+
+const approve = async () => {
+  return await poolToken.approve(offsetHelperAddress, amount);
+};
+```
+
+Let's call the function and add a button.
+
+```typescript
+const offset = async () => {
+  const tx = await approve();
+  await tx.wait();
+
+  write && write();
+};
+
+return (
+  <div>
+    <button onClick={() => offset?.()}>offset</button>
+    {isLoading && <div>Check Wallet</div>}
+    {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+  </div>
+);
+```
+
+If you followed the guide your code should now look like this:
+
+```typescript
+import { usePrepareContractWrite, useContractWrite, useChainId } from "wagmi";
+import ToucanClient from "toucan-sdk";
+import { useProvider, useSigner } from "wagmi";
+import { parseEther } from "ethers/lib/utils";
+
+export default function AutoOffsetPoolToken() {
+  const provider = useProvider();
+  const amount = parseEther("1");
+  const { data: signer, isError } = useSigner();
+
+  const toucan = new ToucanClient("celo", provider);
+  signer && toucan.setSigner(signer);
+  const poolToken = toucan.getPoolContract("NCT");
+
+  const poolAddress = "0xfb60a08855389F3c0A66b29aB9eFa911ed5cbCB5";
+  const offsetHelperAddress = "0xAB62E8a5A43453339f745EaFcbEE0302A31c3d5E";
+
+  const approve = async () => {
+    return await poolToken.approve(offsetHelperAddress, amount);
+  };
+
+  const { config } = usePrepareContractWrite({
+    address: offsetHelperAddress,
+    abi: [
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_poolToken",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "_amountToOffset",
+            type: "uint256",
+          },
+        ],
+        name: "autoOffsetPoolToken",
+        outputs: [
+          {
+            internalType: "address[]",
+            name: "tco2s",
+            type: "address[]",
+          },
+          {
+            internalType: "uint256[]",
+            name: "amounts",
+            type: "uint256[]",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    functionName: "autoOffsetPoolToken",
+    args: [
+      poolAddress,
+      amount,
+      {
+        gasLimit: 2500000,
+      },
+    ],
+  });
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  const offset = async () => {
+    const tx = await approve();
+    await tx.wait();
+
+    write && write();
+  };
+
+  return (
+    <div>
+      <button onClick={() => offset?.()}>offset</button>
+      {isLoading && <div>Check Wallet</div>}
+      {isSuccess && <div>Transaction: {JSON.stringify(data)}</div>}
+    </div>
+  );
+}
+```
 
 Congratulations! You've build your first climate positive app. Now go explore more ways to build on Toucan in
 

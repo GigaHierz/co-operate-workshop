@@ -5,13 +5,13 @@ import { useProvider, useSigner } from "wagmi";
 import { parseEther } from "ethers/lib/utils";
 
 export default function AutoOffsetPoolToken() {
-  const poolAddress = "0xfb60a08855389F3c0A66b29aB9eFa911ed5cbCB5";
+  const poolAddress = "0x02De4766C272abc10Bc88c220D214A26960a7e92";
   const offsetHelperAddress = "0xAB62E8a5A43453339f745EaFcbEE0302A31c3d5E";
   const amount = parseEther("1");
   const provider = useProvider();
   const { data: signer, isError } = useSigner();
 
-  const toucan = new ToucanClient("alfajores", provider);
+  const toucan = new ToucanClient("celo", provider);
   signer && toucan.setSigner(signer);
   const poolToken = toucan.getPoolContract("NCT");
 

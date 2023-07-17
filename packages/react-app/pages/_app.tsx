@@ -6,24 +6,16 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
-import {
-  metaMaskWallet,
-  omniWallet,
-  walletConnectWallet,
-} from "@rainbow-me/rainbowkit/wallets";
+
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-
-// Import known recommended wallets
-import { Valora, CeloWallet, CeloDance } from "@celo/rainbowkit-celo/wallets";
 
 // Import CELO chain information
 import { Alfajores, Celo } from "@celo/rainbowkit-celo/chains";
 
 import Layout from "../components/Layout";
 
-const projectId =
-  process.env.NEXT_PUBLIC_WC_PROJECT_ID || "289a40b4eef16151e69c7db06322f46d";
+const projectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
 
 const { chains, provider } = configureChains(
   [Alfajores, Celo],
