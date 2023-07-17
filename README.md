@@ -399,7 +399,7 @@ Add the list page into the header.tsx file and your "Retirement List Page" and y
 
 ## Offsetting with the OffsetHelper
 
-So far the OffsetHelper has only been deployed on Polygon. But now it's almost ready.
+So far the OffsetHelper has only been deployed on Polygon. But now it's almost ready on Celo.
 This contract will make it even easier to retire carbon credits.
 
 What does it do in detail:
@@ -414,6 +414,8 @@ first let's create a new page called `autoOffset.tsx`. Let's use the `usePrepare
 You will need to look up the address of the poolToken you want to retire/offset. You can find all addresses of Toucans [deployed contracts](https://toucan.earth/contracts) on their page.
 The token should already be in your wallet. If you need some for testing, head over to our faucet. Otherwise head over to Ubeswap (soon Uniswap) to buy some. There are other functions in the OffsetHelper, that already overtake the swapping part. So, check it out. On Celo you can use only the token functions like `autoOffsetExactInToken` and `autoOffsetExactOutToken`and don't need the functions for native tokens like `autoOffsetExactInETH` and `autoOffsetExactOutETH`.
 
+We will do the Offsetting directly on Celo (not using the testnet).
+
 ```typescript
 autoOffsetPoolToken(poolToken: string, amount: BigNumber);
 ```
@@ -423,7 +425,7 @@ import { parseEther } from "ethers/lib/utils.js";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 
 export default function autoOffset() {
-  const poolAddress = "0xfb60a08855389F3c0A66b29aB9eFa911ed5cbCB5";
+  const poolAddress = "0x02De4766C272abc10Bc88c220D214A26960a7e92";
   const amount = parseEther("1");
 
   const { config } = usePrepareContractWrite({
@@ -470,7 +472,7 @@ import { useProvider, useSigner } from "wagmi";
 
 const provider = useProvider();
 const { data: signer, isError } = useSigner();
-const toucan = new ToucanClient("alfajores", provider);
+const toucan = new ToucanClient("celo", provider);
 signer && toucan.setSigner(signer);
 
 const poolToken = toucan.getPoolContract("NCT");
@@ -513,7 +515,7 @@ export default function AutoOffsetPoolToken() {
   const amount = parseEther("1");
   const { data: signer, isError } = useSigner();
 
-  const toucan = new ToucanClient("alfajores", provider);
+  const toucan = new ToucanClient("celo", provider);
   signer && toucan.setSigner(signer);
   const poolToken = toucan.getPoolContract("NCT");
 
